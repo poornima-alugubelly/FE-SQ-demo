@@ -24,8 +24,14 @@ const fibonacci = (n: number): number => {
 // Issue 3: Inefficient sorting algorithm
 const bubbleSort = (arr: number[]): number[] => {
   const result = [...arr];
-  for (let i = 0; i < result.length; i++) {
-    for (let j = 0; j < result.length - 1; j++) {
+  for (const i of Array.from(
+    { length: result.length },
+    (_, i) => i
+  )) {
+    for (const j of Array.from(
+      { length: result.length - 1 },
+      (_, j) => j
+    )) {
       if (result[j] > result[j + 1]) {
         const temp = result[j];
         result[j] = result[j + 1];
