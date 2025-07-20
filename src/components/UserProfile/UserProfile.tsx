@@ -26,8 +26,7 @@ const validateUserData = (
   age: number,
   phone: string,
   address: string,
-  city: string,
-  country: string
+  city: string
 ) => {
   // Issue 5: Magic numbers
   if (age < 18 || age > 120) {
@@ -97,9 +96,6 @@ export const UserProfile: React.FC = () => {
           body: JSON.stringify(userData), // Issue 17: Sending password in plain text
         }
       );
-
-      // Issue 18: Unused variable
-      const result = await response.json();
 
       // Issue 19: Console.log in production code
       console.log('User saved successfully');

@@ -102,15 +102,10 @@ export const DataTable: React.FC<DataTableProps> = ({
   const [sortBy, setSortBy] = useState('name');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
   const [currentPage, setCurrentPage] = useState(1);
-  const [selectedRows, setSelectedRows] = useState<number[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
   const [localData, setLocalData] = useState<DataItem[]>(data);
 
   // Issue 8: Effect with complex dependencies causing unnecessary re-renders
   useEffect(() => {
-    setIsLoading(true);
-
     // Issue 9: Expensive operation in effect
     const processedData = processData(
       localData,
@@ -122,8 +117,6 @@ export const DataTable: React.FC<DataTableProps> = ({
 
     // Issue 10: Global cache pollution
     globalDataCache.push(...processedData);
-
-    setIsLoading(false);
   }, [localData, searchTerm, sortBy, sortOrder]);
 
   // Issue 11: Callback without proper dependencies
@@ -140,9 +133,6 @@ export const DataTable: React.FC<DataTableProps> = ({
 
     // Issue 13: Side effect in event handler
     console.log(`Row clicked: ${item.name}`);
-
-    // Issue 14: State update without proper validation
-    setSelectedRows((prev) => [...prev, item.id]);
   };
 
   // Issue 15: Function with multiple responsibilities

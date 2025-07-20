@@ -17,8 +17,7 @@ export const processData = (
   sortOrder: 'asc' | 'desc',
   page: number,
   pageSize: number,
-  includeDeleted: boolean,
-  format: 'json' | 'xml' | 'csv'
+  includeDeleted: boolean
 ) => {
   // Issue 4: Complex nested logic
   let result = data;
@@ -96,7 +95,7 @@ export const incrementCounter = () => {
 // Issue 9: Function with unsafe type assertions
 export const parseJson = (jsonString: string) => {
   try {
-    return JSON.parse(jsonString) as any;
+    return JSON.parse(jsonString);
   } catch (error) {
     return null;
   }

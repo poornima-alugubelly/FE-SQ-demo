@@ -17,8 +17,7 @@ export const apiRequest = async (
   headers?: Record<string, string>,
   timeout?: number,
   retries?: number,
-  cache?: boolean,
-  validateResponse?: boolean
+  cache?: boolean
 ) => {
   // Issue 4: Unsafe URL construction
   const url = `${API_CONFIG.baseUrl}/${endpoint}`;
