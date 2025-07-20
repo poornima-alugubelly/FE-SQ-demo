@@ -37,35 +37,6 @@ export const useData = (options: UseDataOptions = {}) => {
   const lastRequestRef = useRef<Date | null>(null);
 
   // Issue 5: Function with too many parameters
-  // Extract retry logic to reduce cognitive complexity
-  const handleRetry = useCallback(
-    async (
-      url: string,
-      method: string,
-      requestData: any,
-      headers: Record<string, string>,
-      timeout: number,
-      retries: number,
-      cache: boolean
-    ) => {
-      if (retryCountRef.current < retries) {
-        retryCountRef.current++;
-        setTimeout(() => {
-          fetchData(
-            url,
-            method,
-            requestData,
-            headers,
-            timeout,
-            retries,
-            cache
-          );
-        }, 1000 * retryCountRef.current);
-      }
-    },
-    []
-  );
-
   const fetchData = useCallback(
     async (
       url?: string,
@@ -144,16 +115,23 @@ export const useData = (options: UseDataOptions = {}) => {
           err instanceof Error ? err.message : 'Unknown error';
         setError(errorMessage);
 
-        // Issue 14: Complex retry logic - now extracted
-        await handleRetry(
-          targetUrl,
-          method || options.method || 'GET',
-          requestData,
-          headers || {},
-          timeout || 0,
-          retries || options.retries || 3,
-          cache || false
-        );
+        // Issue 14: Complex retry logic
+        if (
+          retryCountRef.current < (retries || options.retries || 3)
+        ) {
+          retryCountRef.current++;
+          setTimeout(() => {
+            fetchData(
+              url,
+              method,
+              requestData,
+              headers,
+              timeout,
+              retries,
+              cache
+            );
+          }, 1000 * retryCountRef.current);
+        }
 
         if (options.onError) {
           options.onError(err);
@@ -162,7 +140,7 @@ export const useData = (options: UseDataOptions = {}) => {
         setLoading(false);
       }
     },
-    [options, handleRetry]
+    [options]
   );
 
   // Issue 15: Effect with complex dependencies

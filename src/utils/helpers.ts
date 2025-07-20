@@ -93,7 +93,7 @@ export const incrementCounter = () => {
 };
 
 // Issue 9: Function with unsafe type assertions
-export const parseJson = (jsonString: string): any | null => {
+export const parseJson = (jsonString: string) => {
   try {
     return JSON.parse(jsonString);
   } catch (error) {

@@ -85,22 +85,24 @@ export const UserProfile: React.FC = () => {
   // Issue 15: Async function without error handling
   const handleSubmit = async () => {
     try {
-      const response = await fetch('/api/users', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(userData), // Issue 17: Sending password in plain text
-      });
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      await response.json();
+      // Issue 16: Hardcoded URL
+      const response = await fetch(
+        'http://localhost:3000/api/users',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(userData), // Issue 17: Sending password in plain text
+        }
+      );
+
+      // Issue 19: Console.log in production code
+      console.log('User saved successfully');
     } catch (error) {
-      console.error('Error saving user:', error); //Improved error handling
+      // Issue 20: Generic error handling
+      console.error('Error saving user');
     }
-    // Issue 19: Console.log in production code
-    console.log('User saved successfully');
   };
 
   // Issue 21: Inline styles instead of styled components
