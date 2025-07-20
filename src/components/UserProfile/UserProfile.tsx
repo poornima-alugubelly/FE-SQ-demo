@@ -86,22 +86,19 @@ export const UserProfile: React.FC = () => {
   const handleSubmit = async () => {
     try {
       // Issue 16: Hardcoded URL
-      const response = await fetch(
-        'http://localhost:3000/api/users',
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(userData), // Issue 17: Sending password in plain text
-        }
-      );
+      await fetch('http://localhost:3000/api/users', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(userData), // Issue 17: Sending password in plain text
+      });
 
       // Issue 19: Console.log in production code
       console.log('User saved successfully');
     } catch (error) {
       // Issue 20: Generic error handling
-      console.error('Error saving user');
+      console.error('Error saving user:', error);
     }
   };
 
