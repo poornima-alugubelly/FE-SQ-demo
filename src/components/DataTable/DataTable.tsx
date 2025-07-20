@@ -27,7 +27,7 @@ interface DataItem {
 }
 
 // Issue 2: Global variable that could cause memory leaks
-// Removed unused global variable
+const globalDataCache: DataItem[] = [];
 
 // Issue 3: Function with too many responsibilities
 const processData = (
@@ -102,19 +102,22 @@ export const DataTable: React.FC<DataTableProps> = ({
   const [sortBy, setSortBy] = useState('name');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
   const [currentPage, setCurrentPage] = useState(1);
-  // Removed unused localData state variable
+  const [localData, setLocalData] = useState<DataItem[]>(data);
 
   // Issue 8: Effect with complex dependencies causing unnecessary re-renders
   useEffect(() => {
     // Issue 9: Expensive operation in effect
     const processedData = processData(
-      data,
+      localData,
       searchTerm,
       sortBy,
       sortOrder
     );
     setFilteredData(processedData);
-  }, [data, searchTerm, sortBy, sortOrder]);
+
+    // Issue 10: Global cache pollution
+    globalDataCache.push(...processedData);
+  }, [localData, searchTerm, sortBy, sortOrder]);
 
   // Issue 11: Callback without proper dependencies
   const handleSearch = useCallback((term: string) => {

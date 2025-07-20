@@ -68,15 +68,15 @@ export const DashboardCard = memo(
           >
             {title}
           </Typography>
-          {isLoading && <Typography>Loading...</Typography>}
-          {error && (
+          {isLoading ? (
+            <Typography>Loading...</Typography>
+          ) : error ? (
             // Bug 11: Error message displayed without sanitization
             <Typography
               color="error"
               dangerouslySetInnerHTML={{ __html: error }}
             />
-          )}
-          {!isLoading && !error && (
+          ) : (
             <Typography
               style={{ color: themeContext?.theme.secondary }}
             >

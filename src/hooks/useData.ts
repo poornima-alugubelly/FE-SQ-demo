@@ -53,6 +53,7 @@ export const useData = (options: UseDataOptions = {}) => {
       setLoading(true);
       setError(null);
 
+      // Issue 6: Abort previous request without cleanup
       if (abortControllerRef.current) {
         abortControllerRef.current.abort();
       }
@@ -60,6 +61,7 @@ export const useData = (options: UseDataOptions = {}) => {
       abortControllerRef.current = new AbortController();
 
       try {
+        // Issue 7: No input validation
         const response = await fetch(targetUrl, {
           method: method || options.method || 'GET',
           headers: {
@@ -71,6 +73,7 @@ export const useData = (options: UseDataOptions = {}) => {
           signal: abortControllerRef.current.signal,
         });
 
+        // Issue 8: Unsafe response handling
         if (!response.ok) {
           throw new Error(
             `HTTP ${response.status}: ${response.statusText}`
@@ -78,10 +81,13 @@ export const useData = (options: UseDataOptions = {}) => {
         }
 
         const result = await response.json();
+
+        // Issue 9: Unsafe data transformation
         const transformedData = options.transform
           ? options.transform(result)
           : result;
 
+        // Issue 10: Unsafe validation
         if (options.validate && !options.validate(transformedData)) {
           throw new Error('Data validation failed');
         }
@@ -89,6 +95,7 @@ export const useData = (options: UseDataOptions = {}) => {
         setData(transformedData);
         setLastUpdated(new Date());
 
+        // Issue 11: Global variable pollution
         if (cache || options.cache) {
           globalDataStore[targetUrl] = {
             data: transformedData,
@@ -96,16 +103,19 @@ export const useData = (options: UseDataOptions = {}) => {
           };
         }
 
+        // Issue 12: Side effect in callback
         if (options.onSuccess) {
           options.onSuccess(transformedData);
         }
 
         retryCountRef.current = 0;
       } catch (err) {
+        // Issue 13: Generic error handling
         const errorMessage =
           err instanceof Error ? err.message : 'Unknown error';
         setError(errorMessage);
 
+        // Issue 14: Complex retry logic
         if (
           retryCountRef.current < (retries || options.retries || 3)
         ) {
