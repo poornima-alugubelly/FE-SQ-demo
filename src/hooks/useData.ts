@@ -52,48 +52,93 @@ export const useData = (options: UseDataOptions = {}) => {
 
       setLoading(true);
       setError(null);
-      let attempts = 0;
-      const maxAttempts = retries || 3;
-      const fetchWithRetry = async () => {
-        try {
-          const response = await fetch(targetUrl, {
-            method: method || options.method || 'GET',
-            headers: {
-              'Content-Type': 'application/json',
-              ...headers,
-              ...options.headers,
-            },
-            body: requestData
-              ? JSON.stringify(requestData)
-              : undefined,
-            signal: abortControllerRef.current?.signal,
-          });
 
-          if (!response.ok) {
-            throw new Error(
-              `HTTP ${response.status}: ${response.statusText}`
-            );
-          }
-          const result = await response.json();
-          if (cache) {
-            globalDataStore[targetUrl] = {
-              data: result,
-              timestamp: Date.now(),
-            };
-          }
-          return result;
-        } catch (error) {
-          attempts++;
-          if (attempts < maxAttempts) {
-            await new Promise((resolve) =>
-              setTimeout(resolve, 1000 * attempts)
-            );
-            return fetchWithRetry();
-          }
-          throw error;
+      // Issue 6: Abort previous request without cleanup
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
+      }
+
+      abortControllerRef.current = new AbortController();
+
+      try {
+        // Issue 7: No input validation
+        const response = await fetch(targetUrl, {
+          method: method || options.method || 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            ...headers,
+            ...options.headers,
+          },
+          body: requestData ? JSON.stringify(requestData) : undefined,
+          signal: abortControllerRef.current.signal,
+        });
+
+        // Issue 8: Unsafe response handling
+        if (!response.ok) {
+          throw new Error(
+            `HTTP ${response.status}: ${response.statusText}`
+          );
         }
-      };
-      return fetchWithRetry();
+
+        const result = await response.json();
+
+        // Issue 9: Unsafe data transformation
+        const transformedData = options.transform
+          ? options.transform(result)
+          : result;
+
+        // Issue 10: Unsafe validation
+        if (options.validate && !options.validate(transformedData)) {
+          throw new Error('Data validation failed');
+        }
+
+        setData(transformedData);
+        setLastUpdated(new Date());
+
+        // Issue 11: Global variable pollution
+        if (cache || options.cache) {
+          globalDataStore[targetUrl] = {
+            data: transformedData,
+            timestamp: Date.now(),
+          };
+        }
+
+        // Issue 12: Side effect in callback
+        if (options.onSuccess) {
+          options.onSuccess(transformedData);
+        }
+
+        retryCountRef.current = 0;
+      } catch (err) {
+        // Issue 13: Generic error handling
+        const errorMessage =
+          err instanceof Error ? err.message : 'Unknown error';
+        setError(errorMessage);
+
+        // Issue 14: Complex retry logic
+        if (
+          retryCountRef.current < (retries || options.retries || 3)
+        ) {
+          retryCountRef.current++;
+          setTimeout(() => {
+            fetchData(
+              url,
+              method,
+              requestData,
+              headers,
+              timeout,
+              retries,
+              cache
+            );
+          }, 1000 * retryCountRef.current);
+        }
+
+        if (options.onError) {
+          options.onError(err);
+        }
+      } finally {
+        setLoading(false);
+      }
     },
     [options]
   );

@@ -1,9 +1,4 @@
-import React, {
-  createContext,
-  useState,
-  useContext,
-  useMemo,
-} from 'react';
+import React, { createContext, useState, useContext } from 'react';
 
 interface ThemeContextType {
   isDarkMode: boolean;
@@ -20,11 +15,7 @@ export const ThemeContext = createContext<
 >(undefined);
 
 // Bug 1: Missing prop validation
-export const ThemeProvider = ({
-  children,
-}: {
-  children: React.ReactNode;
-}) => {
+export const ThemeProvider = ({ children }) => {
   const [isDarkMode, setIsDarkMode] = useState(false);
 
   // Bug 2: Object identity changes on every render
@@ -42,14 +33,11 @@ export const ThemeProvider = ({
   // Bug 4: Context value object changes identity on every render
   return (
     <ThemeContext.Provider
-      value={useMemo(
-        () => ({
-          isDarkMode,
-          toggleTheme,
-          theme,
-        }),
-        [isDarkMode, theme]
-      )}
+      value={{
+        isDarkMode,
+        toggleTheme,
+        theme,
+      }}
     >
       {children}
     </ThemeContext.Provider>
