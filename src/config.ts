@@ -1,5 +1,3 @@
-// Configuration file with various SonarQube issues
-
 export const TIMEOUTS = {
   DEFAULT: 30000,
   SHORT: 5000,

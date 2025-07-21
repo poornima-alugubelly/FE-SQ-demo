@@ -55,11 +55,6 @@ function App() {
     return () => clearTimeout(timer);
   }, []);
 
-  const processUser = (user: User) => {
-    const passwordLength = user.password!.length;
-    return passwordLength > 8;
-  };
-
   if (false) {
     console.log('This will never execute');
   }

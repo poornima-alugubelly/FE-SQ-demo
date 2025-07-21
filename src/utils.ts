@@ -1,15 +1,6 @@
-// Utility functions with various SonarQube issues
-
-// Hardcoded credentials - Security Hotspot (S6582)
-const SECRET_KEY = 'my-super-secret-key-12345';
-const DB_CONNECTION_STRING =
-  'mongodb://admin:password123@localhost:27017/db';
-
-// Magic numbers - Code Smell (S109)
 const DEFAULT_TIMEOUT = 30000;
 const MAX_FILE_SIZE = 10485760;
 
-// Potential SQL injection - Security Hotspot (S5146)
 export function buildQuery(
   tableName: string,
   whereClause: string
@@ -17,12 +8,10 @@ export function buildQuery(
   return `SELECT * FROM ${tableName} WHERE ${whereClause}`;
 }
 
-// XSS vulnerability - Security Hotspot (S6353)
 export function renderUserContent(content: string): string {
   return `<div>${content}</div>`;
 }
 
-// Potential null pointer exception - Bug (S2259)
 export function getNestedProperty(obj: any, path: string): any {
   const keys = path.split('.');
   let result = obj;
@@ -34,7 +23,6 @@ export function getNestedProperty(obj: any, path: string): any {
   return result;
 }
 
-// Complex function with too many parameters - Code Smell (S107)
 export async function fetchUsers(
   page: number,
   limit: number,
@@ -47,7 +35,6 @@ export async function fetchUsers(
   includePrivate: boolean,
   includeSystem: boolean
 ): Promise<any> {
-  // Magic number - Code Smell (S109)
   if (limit > 1000) {
     limit = 1000;
   }
@@ -66,12 +53,10 @@ export async function fetchUsers(
   });
 
   try {
-    // Magic number - Code Smell (S109)
     const response = await fetch(
       `https://api.example.com/users?${queryParams}`,
       {
         headers: {
-          Authorization: `Bearer ${SECRET_KEY}`,
           'Content-Type': 'application/json',
         },
         signal: AbortSignal.timeout(30000),
@@ -93,7 +78,6 @@ export async function fetchUsers(
   }
 }
 
-// Duplicated code - Maintainability Issue (S4144)
 export function validateEmail(email: string): boolean {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   return emailRegex.test(email);
@@ -104,9 +88,7 @@ export function validateEmailAddress(email: string): boolean {
   return emailRegex.test(email);
 }
 
-// Long function - Maintainability Issue (S3776)
 export function processUserData(user: any): any {
-  // Step 1: Validate user data
   if (!user.name || !user.email) {
     throw new Error('Name and email are required');
   }
@@ -115,7 +97,6 @@ export function processUserData(user: any): any {
     throw new Error('Invalid email format');
   }
 
-  // Step 2: Process user information
   const processedUser = {
     id: user.id,
     name: user.name.trim(),
@@ -128,7 +109,6 @@ export function processUserData(user: any): any {
       : 0,
   };
 
-  // Step 3: Apply business rules
   if (processedUser.nameLength < 2) {
     throw new Error('Name must be at least 2 characters long');
   }
@@ -141,14 +121,12 @@ export function processUserData(user: any): any {
     throw new Error('Email must be less than 100 characters long');
   }
 
-  // Step 4: Calculate additional metrics
   const metrics = {
     nameComplexity: calculateNameComplexity(user.name),
     emailComplexity: calculateEmailComplexity(user.email),
     overallScore: calculateOverallScore(processedUser),
   };
 
-  // Step 5: Apply final transformations
   const finalUser = {
     ...processedUser,
     metrics,
@@ -161,7 +139,6 @@ export function processUserData(user: any): any {
   return finalUser;
 }
 
-// Helper functions with magic numbers - Code Smell (S109)
 function calculatePasswordStrength(password: string): number {
   let strength = 0;
 
@@ -195,20 +172,6 @@ function calculateOverallScore(user: any): number {
   );
 }
 
-// Inconsistent return types - Code Smell (S3516)
-export function getValue(key: string): any {
-  if (key === 'string') {
-    return 'hello';
-  } else if (key === 'number') {
-    return 42;
-  } else if (key === 'boolean') {
-    return true;
-  } else if (key === 'null') {
-    return null;
-  }
-}
-
-// Potential memory leak - Bug (S4138)
 export function createEventListeners(): void {
   const elements = document.querySelectorAll('.button');
 
@@ -219,12 +182,10 @@ export function createEventListeners(): void {
   });
 }
 
-// Hardcoded file path - Security Hotspot (S1075)
 export function readConfigFile(): string {
   return '/etc/app/config.json';
 }
 
-// Potential race condition - Bug (S2886)
 let counter = 0;
 
 export function incrementCounter(): number {
@@ -232,18 +193,10 @@ export function incrementCounter(): number {
   return counter;
 }
 
-// Potential division by zero - Bug (S3518)
 export function divide(a: number, b: number): number {
   return a / b;
 }
 
-// Dead code - Code Smell (S2589)
 if (false) {
   console.log('This will never execute');
-}
-
-// Potential null pointer exception - Bug (S2259)
-export function processUser(user: any) {
-  const passwordLength = user.password!.length;
-  return passwordLength > 8;
 }
