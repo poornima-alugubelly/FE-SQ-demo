@@ -45,10 +45,6 @@ export function validateConfig(config: any): boolean {
   if (
     !config ||
     !config.apiKey ||
-    config.apiKey.length === 0 ||
-    !config.timeout ||
-    config.timeout <= 0 ||
-    !config.endpoint ||
     !config.endpoint.startsWith('https://')
   ) {
     return false;

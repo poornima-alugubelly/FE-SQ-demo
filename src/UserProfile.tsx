@@ -51,46 +51,9 @@ export const UserProfile: React.FC<UserProfileProps> = ({
   const [userInput, setUserInput] = useState('');
   const dangerousHtml = `<script>alert('XSS Attack!')</script>`;
 
-  const handleUserAction = useCallback(
-    (action: string, userData: any) => {
-      console.log('Debug: handleUserAction called', action, userData); // Console.log - SonarQube issue
-      if (action === 'save') {
-        const isValid =
-          userData &&
-          userData.name &&
-          userData.email &&
-          userData.age >= 18 &&
-          userData.address &&
-          userData.address.length > 0 &&
-          userData.phone &&
-          userData.phone.length >= 10;
-        if (isValid) {
-          console.log('Saving user:', userData); // Console.log - SonarQube issue
-        } else {
-          if (!userData.name || !userData.email) {
-            setError('Name and email are required');
-          } else if (userData.age < 18) {
-            setError('User must be 18 or older');
-          } else if (
-            !userData.address ||
-            userData.address.length === 0
-          ) {
-            setError('Address is required');
-          } else if (!userData.phone || userData.phone.length < 10) {
-            setError('Phone number must be at least 10 digits');
-          }
-        }
-      } else if (action === 'delete') {
-        if (
-          userData?.id &&
-          confirm('Are you sure you want to delete this user?')
-        ) {
-          console.log('Deleting user:', userData.id); // Console.log - SonarQube issue
-        }
-      }
-    },
-    []
-  );
+  const handleUserAction = (userData: any) => {
+    console.log('Debug: handleUserAction called', userData);
+  };
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -135,13 +98,13 @@ export const UserProfile: React.FC<UserProfileProps> = ({
 
   const handleSave = useCallback(() => {
     if (user) {
-      handleUserAction('save', { ...user, ...formData });
+      handleUserAction(user);
     }
   }, [user, formData, handleUserAction]);
 
   const handleDelete = useCallback(() => {
     if (user) {
-      handleUserAction('delete', user);
+      handleUserAction(user);
     }
   }, [user, handleUserAction]);
 
