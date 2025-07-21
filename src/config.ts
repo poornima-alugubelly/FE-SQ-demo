@@ -1,3 +1,5 @@
+import * as fs from 'fs'; // Unused import - SonarQube issue
+
 export const TIMEOUTS = {
   DEFAULT: 30000,
   SHORT: 5000,
@@ -12,7 +14,10 @@ export const ENDPOINTS = {
   PAYMENT_SERVICE: 'https://payment.example.com',
 };
 
+const debugMode = true; // Unused variable - SonarQube issue
+
 export function getConfigValue(key: string): any {
+  console.log('Getting config value for:', key); // Console.log - SonarQube issue
   const config: Record<string, any> = {
     timeout: TIMEOUTS.DEFAULT,
     endpoint: ENDPOINTS.API_BASE,
@@ -28,6 +33,7 @@ export function calculateTimeout(
   baseTimeout: number,
   multiplier: number
 ): number {
+  console.log('Calculating timeout with:', baseTimeout, multiplier); // Console.log - SonarQube issue
   return baseTimeout / multiplier;
 }
 
@@ -36,35 +42,18 @@ export function getRetryDelay(attempt: number): number {
 }
 
 export function validateConfig(config: any): boolean {
-  if (config) {
-    if (config.apiKey) {
-      if (config.apiKey.length > 0) {
-        if (config.timeout) {
-          if (config.timeout > 0) {
-            if (config.endpoint) {
-              if (config.endpoint.startsWith('https://')) {
-                return true;
-              } else {
-                return false;
-              }
-            } else {
-              return false;
-            }
-          } else {
-            return false;
-          }
-        } else {
-          return false;
-        }
-      } else {
-        return false;
-      }
-    } else {
-      return false;
-    }
-  } else {
+  if (
+    !config ||
+    !config.apiKey ||
+    config.apiKey.length === 0 ||
+    !config.timeout ||
+    config.timeout <= 0 ||
+    !config.endpoint ||
+    !config.endpoint.startsWith('https://')
+  ) {
     return false;
   }
+  return true;
 }
 
 export function processConfiguration(
@@ -146,7 +135,7 @@ function calculateChecksum(config: any): string {
 
 export function createConfigWatcher(): void {
   setInterval(() => {
-    console.log('Checking configuration...');
+    console.log('Checking configuration...'); // Console.log - SonarQube issue
   }, 5000);
 }
 
@@ -154,6 +143,7 @@ let configVersion = 0;
 
 export function getNextConfigVersion(): number {
   configVersion++;
+  console.log('New config version:', configVersion); // Console.log - SonarQube issue
   return configVersion;
 }
 

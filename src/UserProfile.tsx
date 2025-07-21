@@ -1,4 +1,10 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, {
+  useState,
+  useEffect,
+  useCallback,
+  useMemo,
+} from 'react';
+// import { debounce } from 'lodash'; // Unused import - SonarQube issue
 
 interface User {
   id: number;
@@ -40,36 +46,46 @@ export const UserProfile: React.FC<UserProfileProps> = ({
   const [error, setError] = useState<string>('');
   const [formData, setFormData] = useState<Partial<User>>({});
   const [retryCount, setRetryCount] = useState(0);
-  const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
+  const unusedVariable = 'This variable is never used'; // Unused variable - SonarQube issue
 
   const [userInput, setUserInput] = useState('');
   const dangerousHtml = `<script>alert('XSS Attack!')</script>`;
 
   const handleUserAction = useCallback(
     (action: string, userData: any) => {
+      console.log('Debug: handleUserAction called', action, userData); // Console.log - SonarQube issue
       if (action === 'save') {
-        if (userData && userData.name && userData.email) {
-          if (userData.age && userData.age >= 18) {
-            if (userData.address && userData.address.length > 0) {
-              if (userData.phone && userData.phone.length >= 10) {
-                console.log('Saving user:', userData);
-              } else {
-                setError('Phone number must be at least 10 digits');
-              }
-            } else {
-              setError('Address is required');
-            }
-          } else {
-            setError('User must be 18 or older');
-          }
+        const isValid =
+          userData &&
+          userData.name &&
+          userData.email &&
+          userData.age >= 18 &&
+          userData.address &&
+          userData.address.length > 0 &&
+          userData.phone &&
+          userData.phone.length >= 10;
+        if (isValid) {
+          console.log('Saving user:', userData); // Console.log - SonarQube issue
         } else {
-          setError('Name and email are required');
+          if (!userData.name || !userData.email) {
+            setError('Name and email are required');
+          } else if (userData.age < 18) {
+            setError('User must be 18 or older');
+          } else if (
+            !userData.address ||
+            userData.address.length === 0
+          ) {
+            setError('Address is required');
+          } else if (!userData.phone || userData.phone.length < 10) {
+            setError('Phone number must be at least 10 digits');
+          }
         }
       } else if (action === 'delete') {
-        if (userData && userData.id) {
-          if (confirm('Are you sure you want to delete this user?')) {
-            console.log('Deleting user:', userData.id);
-          }
+        if (
+          userData?.id &&
+          confirm('Are you sure you want to delete this user?')
+        ) {
+          console.log('Deleting user:', userData.id); // Console.log - SonarQube issue
         }
       }
     },
@@ -78,7 +94,7 @@ export const UserProfile: React.FC<UserProfileProps> = ({
 
   useEffect(() => {
     const interval = setInterval(() => {
-      console.log('Periodic check');
+      console.log('Periodic check'); // Console.log - SonarQube issue
     }, refreshInterval);
 
     return () => clearInterval(interval);
@@ -104,7 +120,6 @@ export const UserProfile: React.FC<UserProfileProps> = ({
 
         const userData = await response.json();
         setUser(userData);
-        setLastUpdated(new Date());
       } catch (error) {
         setError(`Failed to fetch user: ${error}`);
         if (retryCount < maxRetries) {
@@ -130,6 +145,7 @@ export const UserProfile: React.FC<UserProfileProps> = ({
     }
   }, [user, handleUserAction]);
 
+  // Missing return statement indentation - minor issue
   if (loading) {
     return <div>Loading...</div>;
   }
