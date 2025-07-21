@@ -1,23 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import logo from './logo.svg';
 import './App.css';
-
-// Magic numbers - Code Smell
 const MAX_RETRIES = 3;
 const TIMEOUT_DELAY = 5000;
-const MAX_ITEMS = 100;
-
-// Unused variable - Code Smell
-const UNUSED_CONSTANT = 'This is never used';
 
 interface User {
   id: number;
   name: string;
   email: string;
-  password?: string; // Optional but could be undefined
+  password?: string;
 }
 
-// Complex function with too many parameters - Code Smell
+// Complex function with too many parameters - Code Smell (S107)
 function processUserData(
   userId: number,
   userName: string,
@@ -30,12 +24,11 @@ function processUserData(
   userPermissions: any,
   userMetadata: any
 ) {
-  // Magic number - Code Smell
+  // Magic number - Code Smell (S109)
   if (userAge < 18) {
     return false;
   }
 
-  // Potential null pointer exception - Bug
   const user = {
     id: userId,
     name: userName,
@@ -49,13 +42,10 @@ function processUserData(
     metadata: userMetadata,
   };
 
-  // Unused variable - Code Smell
-  const processedData = JSON.stringify(user);
-
   return true;
 }
 
-// Duplicated code - Maintainability Issue
+// Duplicated code - Maintainability Issue (S4144)
 function validateEmail(email: string): boolean {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   return emailRegex.test(email);
@@ -66,24 +56,15 @@ function validateEmailAgain(email: string): boolean {
   return emailRegex.test(email);
 }
 
-// Long function - Maintainability Issue
 function App() {
   const [count, setCount] = useState(0);
   const [userInput, setUserInput] = useState('');
-  const [users, setUsers] = useState<User[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
-  const [data, setData] = useState<any>(null);
-  const [filter, setFilter] = useState('');
-  const [sortBy, setSortBy] = useState('');
-  const [page, setPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
 
-  // Potential XSS vulnerability - Security Hotspot
+  // Potential XSS vulnerability - Security Hotspot (S6353)
   const dangerousHtml = `<script>alert('XSS Attack!')</script>`;
 
   useEffect(() => {
-    // Magic number - Code Smell
+    // Magic number - Code Smell (S109)
     const timer = setTimeout(() => {
       setCount((prev) => prev + 1);
     }, 1000);
@@ -91,7 +72,7 @@ function App() {
     return () => clearTimeout(timer);
   }, []);
 
-  // Complex nested conditions - Code Smell
+  // Complex nested conditions - Code Smell (S3776)
   const handleUserAction = (
     action: string,
     userId: number,
@@ -102,66 +83,41 @@ function App() {
         if (validateEmail(userData.email)) {
           if (userData.age && userData.age >= 18) {
             if (userData.address && userData.address.length > 0) {
-              // Process user creation
               console.log('Creating user:', userData);
             } else {
-              setError('Address is required');
+              console.error('Address is required');
             }
           } else {
-            setError('User must be 18 or older');
+            console.error('User must be 18 or older');
           }
         } else {
-          setError('Invalid email format');
+          console.error('Invalid email format');
         }
       } else {
-        setError('Name and email are required');
-      }
-    } else if (action === 'update') {
-      // Similar nested logic...
-      if (userData && userData.id) {
-        if (userData.name || userData.email) {
-          if (!userData.email || validateEmail(userData.email)) {
-            console.log('Updating user:', userData);
-          } else {
-            setError('Invalid email format');
-          }
-        } else {
-          setError('At least one field must be provided');
-        }
-      } else {
-        setError('User ID is required');
+        console.error('Name and email are required');
       }
     } else if (action === 'delete') {
       if (userId && userId > 0) {
         console.log('Deleting user:', userId);
       } else {
-        setError('Valid user ID is required');
+        console.error('Valid user ID is required');
       }
     }
   };
 
-  // Unused function parameter - Code Smell
-  const unusedParameter = (
-    param1: string,
-    param2: string,
-    param3: string
-  ) => {
-    console.log(param1, param3); // param2 is unused
-  };
-
-  // Potential null pointer exception - Bug
+  // Potential null pointer exception - Bug (S2259)
   const processUser = (user: User) => {
     // user.password could be undefined
     const passwordLength = user.password!.length; // Non-null assertion operator
     return passwordLength > 8;
   };
 
-  // Dead code - Code Smell
+  // Dead code - Code Smell (S2589)
   if (false) {
     console.log('This will never execute');
   }
 
-  // Inconsistent return types - Code Smell
+  // Inconsistent return types - Code Smell (S3516)
   const getValue = (type: string) => {
     if (type === 'string') {
       return 'hello';
@@ -178,7 +134,7 @@ function App() {
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
 
-        {/* XSS vulnerability - Security Hotspot */}
+        {/* XSS vulnerability - Security Hotspot (S6353) */}
         <div dangerouslySetInnerHTML={{ __html: dangerousHtml }} />
 
         {/* Potential XSS through user input */}

@@ -1,6 +1,5 @@
 // Configuration file with various SonarQube issues
 
-// Magic numbers - Code Smell
 export const TIMEOUTS = {
   DEFAULT: 30000,
   SHORT: 5000,
@@ -9,54 +8,32 @@ export const TIMEOUTS = {
   RETRY_DELAY: 1000,
 };
 
-// Unused constants - Code Smell
-const UNUSED_CONFIG = 'This configuration is never used';
-const DEBUG_MODE = true;
-
-// Hardcoded URLs - Security Hotspot
 export const ENDPOINTS = {
   API_BASE: 'https://api.example.com/v1',
   AUTH_SERVICE: 'https://auth.example.com',
   PAYMENT_SERVICE: 'https://payment.example.com',
-  FILE_SERVICE: 'https://files.example.com',
-  WEBSOCKET_URL: 'wss://ws.example.com',
 };
 
-// Magic strings - Code Smell
-export const STATUS_CODES = {
-  SUCCESS: '200',
-  NOT_FOUND: '404',
-  UNAUTHORIZED: '401',
-  FORBIDDEN: '403',
-  INTERNAL_ERROR: '500',
-};
-
-// Potential null pointer exception - Bug
+// Potential null pointer exception - Bug (S2259)
 export function getConfigValue(key: string): any {
-  const config = {
+  const config: Record<string, any> = {
     timeout: TIMEOUTS.DEFAULT,
     endpoint: ENDPOINTS.API_BASE,
   };
 
-  return config[key];
+  return config[key]; // key might not exist
 }
 
-// Inconsistent naming convention - Code Smell
+// Inconsistent naming convention - Code Smell (S100)
 export const api_url = ENDPOINTS.API_BASE; // Should be API_URL
 export const timeout_ms = TIMEOUTS.DEFAULT; // Should be TIMEOUT_MS
-export const maxRetries = TIMEOUTS.MAX_RETRIES; // Should be MAX_RETRIES
 
-// Dead code - Code Smell
+// Dead code - Code Smell (S2589)
 if (false) {
   console.log('This configuration will never be used');
 }
 
-// Unused function - Code Smell
-export function unusedConfigFunction(): void {
-  console.log('This configuration function is never called');
-}
-
-// Potential division by zero - Bug
+// Potential division by zero - Bug (S3518)
 export function calculateTimeout(
   baseTimeout: number,
   multiplier: number
@@ -64,12 +41,12 @@ export function calculateTimeout(
   return baseTimeout / multiplier; // multiplier could be 0
 }
 
-// Magic number - Code Smell
+// Magic number - Code Smell (S109)
 export function getRetryDelay(attempt: number): number {
   return attempt * 1000; // Magic number 1000
 }
 
-// Inconsistent return types - Code Smell
+// Inconsistent return types - Code Smell (S3516)
 export function getConfigType(type: string): any {
   if (type === 'string') {
     return 'config';
@@ -81,18 +58,7 @@ export function getConfigType(type: string): any {
   // Missing return for other cases
 }
 
-// Unused variable - Code Smell
-export function processConfig(config: any): void {
-  const { name, value, type } = config;
-  console.log(name, value); // type is unused
-}
-
-// Potential undefined access - Bug
-export function accessConfigProperty(obj: any, prop: string): any {
-  return obj[prop]; // obj could be undefined
-}
-
-// Complex nested conditions - Code Smell
+// Complex nested conditions - Code Smell (S3776)
 export function validateConfig(config: any): boolean {
   if (config) {
     if (config.apiKey) {
@@ -125,7 +91,7 @@ export function validateConfig(config: any): boolean {
   }
 }
 
-// Long function - Maintainability Issue
+// Long function - Maintainability Issue (S3776)
 export function processConfiguration(
   config: any,
   environment: string,
@@ -195,12 +161,11 @@ export function processConfiguration(
   return finalConfig;
 }
 
-// Helper function with magic numbers - Code Smell
+// Helper function with magic numbers - Code Smell (S109)
 function calculateChecksum(config: any): string {
   const str = JSON.stringify(config);
   let hash = 0;
 
-  // Magic numbers - Code Smell
   for (let i = 0; i < str.length; i++) {
     const char = str.charCodeAt(i);
     hash = (hash << 5) - hash + char;
@@ -210,7 +175,7 @@ function calculateChecksum(config: any): string {
   return hash.toString(16);
 }
 
-// Potential memory leak - Bug
+// Potential memory leak - Bug (S4138)
 export function createConfigWatcher(): void {
   const interval = setInterval(() => {
     console.log('Checking configuration...');
@@ -219,7 +184,7 @@ export function createConfigWatcher(): void {
   // Missing clearInterval - potential memory leak
 }
 
-// Potential race condition - Bug
+// Potential race condition - Bug (S2886)
 let configVersion = 0;
 
 export function getNextConfigVersion(): number {
@@ -227,17 +192,7 @@ export function getNextConfigVersion(): number {
   return configVersion;
 }
 
-// Unused parameter - Code Smell
-export function logConfigChange(
-  oldConfig: any,
-  newConfig: any,
-  timestamp: string,
-  userId: string
-): void {
-  console.log(`Configuration changed at ${timestamp}`); // oldConfig, newConfig, and userId are unused
-}
-
-// Magic string - Code Smell
+// Magic string - Code Smell (S1192)
 export function getEnvironmentName(env: string): string {
   if (env === 'dev') {
     return 'Development';
