@@ -41,16 +41,6 @@ export function getRetryDelay(attempt: number): number {
   return attempt * 1000;
 }
 
-export function getConfigType(type: string): any {
-  if (type === 'string') {
-    return 'config';
-  } else if (type === 'number') {
-    return 42;
-  } else if (type === 'boolean') {
-    return true;
-  }
-}
-
 export function validateConfig(config: any): boolean {
   if (config) {
     if (config.apiKey) {

@@ -55,38 +55,6 @@ function App() {
     return () => clearTimeout(timer);
   }, []);
 
-  const handleUserAction = (
-    action: string,
-    userId: number,
-    userData: any
-  ) => {
-    if (action === 'create') {
-      if (userData && userData.name && userData.email) {
-        if (validateEmail(userData.email)) {
-          if (userData.age && userData.age >= 18) {
-            if (userData.address && userData.address.length > 0) {
-              console.log('Creating user:', userData);
-            } else {
-              console.error('Address is required');
-            }
-          } else {
-            console.error('User must be 18 or older');
-          }
-        } else {
-          console.error('Invalid email format');
-        }
-      } else {
-        console.error('Name and email are required');
-      }
-    } else if (action === 'delete') {
-      if (userId && userId > 0) {
-        console.log('Deleting user:', userId);
-      } else {
-        console.error('Valid user ID is required');
-      }
-    }
-  };
-
   const processUser = (user: User) => {
     const passwordLength = user.password!.length;
     return passwordLength > 8;
