@@ -145,7 +145,7 @@ function calculateChecksum(config: any): string {
 }
 
 export function createConfigWatcher(): void {
-  const interval = setInterval(() => {
+  setInterval(() => {
     console.log('Checking configuration...');
   }, 5000);
 }

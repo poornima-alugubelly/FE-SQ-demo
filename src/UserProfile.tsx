@@ -76,18 +76,6 @@ export const UserProfile: React.FC<UserProfileProps> = ({
     []
   );
 
-  const processUserData = useCallback((userData: User) => {
-    const addressLength = userData.address!.length;
-    return addressLength > 0;
-  }, []);
-
-  const logEvent = useCallback(
-    (event: string, data: any, timestamp: string, userId: number) => {
-      console.log(`${event} at ${timestamp}`);
-    },
-    []
-  );
-
   useEffect(() => {
     const interval = setInterval(() => {
       console.log('Periodic check');

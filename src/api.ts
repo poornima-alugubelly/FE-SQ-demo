@@ -185,7 +185,7 @@ function calculatePasswordStrength(password: string): number {
   if (password.length >= 12) strength += 1;
   if (/[a-z]/.test(password)) strength += 1;
   if (/[A-Z]/.test(password)) strength += 1;
-  if (/[0-9]/.test(password)) strength += 1;
+  if (/\d/.test(password)) strength += 1;
   if (/[^A-Za-z0-9]/.test(password)) strength += 1;
 
   return strength;
@@ -200,9 +200,7 @@ function calculateNameComplexity(name: string): number {
 
 function calculateEmailComplexity(email: string): number {
   // Magic numbers - Code Smell
-  return (
-    email.length * 0.2 + (email.match(/[0-9]/g)?.length || 0) * 0.1
-  );
+  return email.length * 0.2 + (email.match(/\d/g)?.length || 0) * 0.1;
 }
 
 function calculateOverallScore(user: any): number {
@@ -329,11 +327,6 @@ export function getStatus(statusCode: number): string {
   } else {
     return 'unknown'; // Magic string
   }
-}
-
-// Dead code - Code Smell
-if (false) {
-  console.log('This will never execute');
 }
 
 // Potential null pointer exception - Bug
