@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import logo from './logo.svg';
 import './App.css';
+
 const MAX_RETRIES = 3;
 const TIMEOUT_DELAY = 5000;
 
@@ -11,7 +12,6 @@ interface User {
   password?: string;
 }
 
-// Complex function with too many parameters - Code Smell (S107)
 function processUserData(
   userId: number,
   userName: string,
@@ -24,28 +24,13 @@ function processUserData(
   userPermissions: any,
   userMetadata: any
 ) {
-  // Magic number - Code Smell (S109)
   if (userAge < 18) {
     return false;
   }
 
-  const user = {
-    id: userId,
-    name: userName,
-    email: userEmail,
-    age: userAge,
-    address: userAddress,
-    phone: userPhone,
-    preferences: userPreferences,
-    settings: userSettings,
-    permissions: userPermissions,
-    metadata: userMetadata,
-  };
-
   return true;
 }
 
-// Duplicated code - Maintainability Issue (S4144)
 function validateEmail(email: string): boolean {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   return emailRegex.test(email);
@@ -60,11 +45,9 @@ function App() {
   const [count, setCount] = useState(0);
   const [userInput, setUserInput] = useState('');
 
-  // Potential XSS vulnerability - Security Hotspot (S6353)
   const dangerousHtml = `<script>alert('XSS Attack!')</script>`;
 
   useEffect(() => {
-    // Magic number - Code Smell (S109)
     const timer = setTimeout(() => {
       setCount((prev) => prev + 1);
     }, 1000);
@@ -72,7 +55,6 @@ function App() {
     return () => clearTimeout(timer);
   }, []);
 
-  // Complex nested conditions - Code Smell (S3776)
   const handleUserAction = (
     action: string,
     userId: number,
@@ -105,19 +87,15 @@ function App() {
     }
   };
 
-  // Potential null pointer exception - Bug (S2259)
   const processUser = (user: User) => {
-    // user.password could be undefined
-    const passwordLength = user.password!.length; // Non-null assertion operator
+    const passwordLength = user.password!.length;
     return passwordLength > 8;
   };
 
-  // Dead code - Code Smell (S2589)
   if (false) {
     console.log('This will never execute');
   }
 
-  // Inconsistent return types - Code Smell (S3516)
   const getValue = (type: string) => {
     if (type === 'string') {
       return 'hello';
@@ -126,7 +104,6 @@ function App() {
     } else if (type === 'boolean') {
       return true;
     }
-    // Missing return for other cases
   };
 
   return (
@@ -134,10 +111,7 @@ function App() {
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
 
-        {/* XSS vulnerability - Security Hotspot (S6353) */}
         <div dangerouslySetInnerHTML={{ __html: dangerousHtml }} />
-
-        {/* Potential XSS through user input */}
         <div dangerouslySetInnerHTML={{ __html: userInput }} />
 
         <p>

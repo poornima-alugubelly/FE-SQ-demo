@@ -19,7 +19,7 @@ export function buildQuery(
 
 // XSS vulnerability - Security Hotspot (S6353)
 export function renderUserContent(content: string): string {
-  return `<div>${content}</div>`; // No sanitization
+  return `<div>${content}</div>`;
 }
 
 // Potential null pointer exception - Bug (S2259)
@@ -28,7 +28,7 @@ export function getNestedProperty(obj: any, path: string): any {
   let result = obj;
 
   for (const key of keys) {
-    result = result[key]; // Could be undefined
+    result = result[key];
   }
 
   return result;
@@ -206,7 +206,6 @@ export function getValue(key: string): any {
   } else if (key === 'null') {
     return null;
   }
-  // Missing return for other cases
 }
 
 // Potential memory leak - Bug (S4138)
@@ -217,26 +216,25 @@ export function createEventListeners(): void {
     element.addEventListener('click', () => {
       console.log('Button clicked');
     });
-    // Missing removeEventListener - potential memory leak
   });
 }
 
 // Hardcoded file path - Security Hotspot (S1075)
 export function readConfigFile(): string {
-  return '/etc/app/config.json'; // Hardcoded path
+  return '/etc/app/config.json';
 }
 
 // Potential race condition - Bug (S2886)
 let counter = 0;
 
 export function incrementCounter(): number {
-  counter++; // Not atomic
+  counter++;
   return counter;
 }
 
 // Potential division by zero - Bug (S3518)
 export function divide(a: number, b: number): number {
-  return a / b; // No check for b === 0
+  return a / b;
 }
 
 // Dead code - Code Smell (S2589)
@@ -246,7 +244,6 @@ if (false) {
 
 // Potential null pointer exception - Bug (S2259)
 export function processUser(user: any) {
-  // user.password could be undefined
-  const passwordLength = user.password!.length; // Non-null assertion operator
+  const passwordLength = user.password!.length;
   return passwordLength > 8;
 }
