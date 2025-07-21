@@ -40,7 +40,7 @@ export const UserProfile: React.FC<UserProfileProps> = ({
   const [error, setError] = useState<string>('');
   const [formData, setFormData] = useState<Partial<User>>({});
   const [retryCount, setRetryCount] = useState(0);
-  const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
+  useState<Date | null>(null);
 
   const [userInput, setUserInput] = useState('');
   const dangerousHtml = `<script>alert('XSS Attack!')</script>`;
@@ -48,28 +48,37 @@ export const UserProfile: React.FC<UserProfileProps> = ({
   const handleUserAction = useCallback(
     (action: string, userData: any) => {
       if (action === 'save') {
-        if (userData && userData.name && userData.email) {
-          if (userData.age && userData.age >= 18) {
-            if (userData.address && userData.address.length > 0) {
-              if (userData.phone && userData.phone.length >= 10) {
-                console.log('Saving user:', userData);
-              } else {
-                setError('Phone number must be at least 10 digits');
-              }
-            } else {
-              setError('Address is required');
-            }
-          } else {
-            setError('User must be 18 or older');
-          }
+        const isValid =
+          userData &&
+          userData.name &&
+          userData.email &&
+          userData.age >= 18 &&
+          userData.address &&
+          userData.address.length > 0 &&
+          userData.phone &&
+          userData.phone.length >= 10;
+        if (isValid) {
+          console.log('Saving user:', userData);
         } else {
-          setError('Name and email are required');
+          if (!userData.name || !userData.email) {
+            setError('Name and email are required');
+          } else if (userData.age < 18) {
+            setError('User must be 18 or older');
+          } else if (
+            !userData.address ||
+            userData.address.length === 0
+          ) {
+            setError('Address is required');
+          } else if (!userData.phone || userData.phone.length < 10) {
+            setError('Phone number must be at least 10 digits');
+          }
         }
       } else if (action === 'delete') {
-        if (userData && userData.id) {
-          if (confirm('Are you sure you want to delete this user?')) {
-            console.log('Deleting user:', userData.id);
-          }
+        if (
+          userData?.id &&
+          confirm('Are you sure you want to delete this user?')
+        ) {
+          console.log('Deleting user:', userData.id);
         }
       }
     },
@@ -104,7 +113,6 @@ export const UserProfile: React.FC<UserProfileProps> = ({
 
         const userData = await response.json();
         setUser(userData);
-        setLastUpdated(new Date());
       } catch (error) {
         setError(`Failed to fetch user: ${error}`);
         if (retryCount < maxRetries) {

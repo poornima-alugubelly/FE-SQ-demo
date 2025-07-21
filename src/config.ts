@@ -36,35 +36,18 @@ export function getRetryDelay(attempt: number): number {
 }
 
 export function validateConfig(config: any): boolean {
-  if (config) {
-    if (config.apiKey) {
-      if (config.apiKey.length > 0) {
-        if (config.timeout) {
-          if (config.timeout > 0) {
-            if (config.endpoint) {
-              if (config.endpoint.startsWith('https://')) {
-                return true;
-              } else {
-                return false;
-              }
-            } else {
-              return false;
-            }
-          } else {
-            return false;
-          }
-        } else {
-          return false;
-        }
-      } else {
-        return false;
-      }
-    } else {
-      return false;
-    }
-  } else {
+  if (
+    !config ||
+    !config.apiKey ||
+    config.apiKey.length === 0 ||
+    !config.timeout ||
+    config.timeout <= 0 ||
+    !config.endpoint ||
+    !config.endpoint.startsWith('https://')
+  ) {
     return false;
   }
+  return true;
 }
 
 export function processConfiguration(

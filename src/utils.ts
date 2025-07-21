@@ -23,18 +23,30 @@ export function getNestedProperty(obj: any, path: string): any {
   return result;
 }
 
-export async function fetchUsers(
-  page: number,
-  limit: number,
-  sortBy: string,
-  sortOrder: string,
-  filterBy: string,
-  includeDeleted: boolean,
-  includeArchived: boolean,
-  includeDrafts: boolean,
-  includePrivate: boolean,
-  includeSystem: boolean
-): Promise<any> {
+export async function fetchUsers(options: {
+  page: number;
+  limit: number;
+  sortBy: string;
+  sortOrder: string;
+  filterBy: string;
+  includeDeleted: boolean;
+  includeArchived: boolean;
+  includeDrafts: boolean;
+  includePrivate: boolean;
+  includeSystem: boolean;
+}): Promise<any> {
+  const {
+    page,
+    sortBy,
+    sortOrder,
+    filterBy,
+    includeDeleted,
+    includeArchived,
+    includeDrafts,
+    includePrivate,
+    includeSystem,
+  } = options;
+  let { limit } = options;
   if (limit > 1000) {
     limit = 1000;
   }

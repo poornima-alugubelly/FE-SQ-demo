@@ -48,18 +48,31 @@ export function getNestedProperty(obj: any, path: string): any {
 }
 
 // Complex function with too many parameters - Code Smell
-export async function fetchUsers(
-  page: number,
-  limit: number,
-  sortBy: string,
-  sortOrder: string,
-  filterBy: string,
-  includeDeleted: boolean,
-  includeArchived: boolean,
-  includeDrafts: boolean,
-  includePrivate: boolean,
-  includeSystem: boolean
-): Promise<ApiResponse<User[]>> {
+export async function fetchUsers(params: {
+  page: number;
+  limit: number;
+  sortBy: string;
+  sortOrder: string;
+  filterBy: string;
+  includeDeleted: boolean;
+  includeArchived: boolean;
+  includeDrafts: boolean;
+  includePrivate: boolean;
+  includeSystem: boolean;
+}): Promise<ApiResponse<User[]>> {
+  const {
+    page,
+    sortBy,
+    sortOrder,
+    filterBy,
+    includeDeleted,
+    includeArchived,
+    includeDrafts,
+    includePrivate,
+    includeSystem,
+  } = params;
+  let { limit } = params;
+
   // Magic number - Code Smell
   if (limit > 1000) {
     limit = 1000;
