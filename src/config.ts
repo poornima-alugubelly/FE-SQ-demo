@@ -42,11 +42,7 @@ export function getRetryDelay(attempt: number): number {
 }
 
 export function validateConfig(config: any): boolean {
-  if (
-    !config ||
-    !config.apiKey ||
-    !config.endpoint.startsWith('https://')
-  ) {
+  if (!config?.apiKey || !config?.endpoint?.startsWith('https://')) {
     return false;
   }
   return true;

@@ -1,10 +1,4 @@
-import React, {
-  useState,
-  useEffect,
-  useCallback,
-  useMemo,
-} from 'react';
-// import { debounce } from 'lodash'; // Unused import - SonarQube issue
+import React, { useState, useEffect, useCallback } from 'react';
 
 interface User {
   id: number;
@@ -46,7 +40,6 @@ export const UserProfile: React.FC<UserProfileProps> = ({
   const [error, setError] = useState<string>('');
   const [formData, setFormData] = useState<Partial<User>>({});
   const [retryCount, setRetryCount] = useState(0);
-  const unusedVariable = 'This variable is never used'; // Unused variable - SonarQube issue
 
   const [userInput, setUserInput] = useState('');
   const dangerousHtml = `<script>alert('XSS Attack!')</script>`;

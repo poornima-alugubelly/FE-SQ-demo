@@ -12,19 +12,19 @@ interface User {
   password?: string;
 }
 
-function processUserData(
-  userId: number,
-  userName: string,
-  userEmail: string,
-  userAge: number,
-  userAddress: string,
-  userPhone: string,
-  userPreferences: any,
-  userSettings: any,
-  userPermissions: any,
-  userMetadata: any
-) {
-  if (userAge < 18) {
+function processUserData(userData: {
+  userId: number;
+  userName: string;
+  userEmail: string;
+  userAge: number;
+  userAddress: string;
+  userPhone: string;
+  userPreferences: any;
+  userSettings: any;
+  userPermissions: any;
+  userMetadata: any;
+}) {
+  if (userData.userAge < 18) {
     return false;
   }
 
