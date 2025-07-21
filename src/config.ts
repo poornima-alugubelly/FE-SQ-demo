@@ -24,10 +24,6 @@ export function getConfigValue(key: string): any {
 export const api_url = ENDPOINTS.API_BASE;
 export const timeout_ms = TIMEOUTS.DEFAULT;
 
-if (false) {
-  console.log('This configuration will never be used');
-}
-
 export function calculateTimeout(
   baseTimeout: number,
   multiplier: number

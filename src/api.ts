@@ -9,10 +9,6 @@ const MAX_RETRIES = 3;
 const RETRY_DELAY = 1000;
 const MAX_FILE_SIZE = 10485760;
 
-// Unused constants - Code Smell
-const UNUSED_API_VERSION = 'v2';
-const DEBUG_MODE = true;
-
 interface ApiResponse<T> {
   data: T;
   status: number;
@@ -98,17 +94,7 @@ export async function fetchUsers(
 
     if (!response.ok) {
       // Magic number - Code Smell
-      if (response.status === 401) {
-        throw new Error('Unauthorized');
-      } else if (response.status === 403) {
-        throw new Error('Forbidden');
-      } else if (response.status === 404) {
-        throw new Error('Not found');
-      } else if (response.status === 500) {
-        throw new Error('Internal server error');
-      } else {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
+      throw new Error(`HTTP error! status: ${response.status}`);
     }
 
     const data = await response.json();
@@ -255,11 +241,11 @@ export function logApiCall(
 
 // Potential memory leak - Bug
 export function createEventListeners(): void {
-  const elements = document.querySelectorAll('.api-button');
+  const elements = document.querySelectorAll('.button');
 
   elements.forEach((element) => {
     element.addEventListener('click', () => {
-      console.log('API button clicked');
+      console.log('Button clicked');
     });
     // Missing removeEventListener - potential memory leak
   });
@@ -267,15 +253,15 @@ export function createEventListeners(): void {
 
 // Hardcoded file path - Security Hotspot
 export function readConfigFile(): string {
-  return '/etc/app/api-config.json'; // Hardcoded path
+  return '/etc/app/config.json'; // Hardcoded path
 }
 
 // Potential race condition - Bug
-let requestCounter = 0;
+let requestId = 0;
 
 export function getNextRequestId(): number {
-  requestCounter++; // Not atomic
-  return requestCounter;
+  requestId++; // Not atomic
+  return requestId;
 }
 
 // Unused function - Code Smell
@@ -286,16 +272,25 @@ export function unusedApiFunction(): void {
 
 // Potential infinite loop - Bug
 export function processArray(arr: number[]): number[] {
-  const result: number[] = [];
-
-  for (let i = 0; i < arr.length; i++) {
-    if (arr[i] > 0) {
-      result.push(arr[i]);
-      // Missing i++ could cause infinite loop if arr[i] is always > 0
+  return arr.map((item) => {
+    if (item > 0) {
+      if (item % 2 === 0) {
+        if (item > 10) {
+          if (item < 100) {
+            return item * 2;
+          } else {
+            return item / 2;
+          }
+        } else {
+          return item + 1;
+        }
+      } else {
+        return item - 1;
+      }
+    } else {
+      return 0;
     }
-  }
-
-  return result;
+  });
 }
 
 // Inconsistent naming convention - Code Smell
@@ -315,7 +310,7 @@ export function destructureExample(obj: {
   email: string;
 }): void {
   const { name, age, email } = obj;
-  console.log(name, age); // email is unused
+  console.log(`Name: ${name}, Age: ${age}, Email: ${email}`);
 }
 
 // Potential undefined access - Bug
@@ -325,14 +320,14 @@ export function accessProperty(obj: any, prop: string): any {
 
 // Magic string - Code Smell
 export function getStatus(statusCode: number): string {
-  if (statusCode === 200) {
-    return 'OK';
-  } else if (statusCode === 404) {
-    return 'Not Found';
-  } else if (statusCode === 500) {
-    return 'Internal Server Error';
+  if (statusCode >= 200 && statusCode < 300) {
+    return 'success';
+  } else if (statusCode >= 400 && statusCode < 500) {
+    return 'client_error';
+  } else if (statusCode >= 500) {
+    return 'server_error';
   } else {
-    return 'Unknown'; // Magic string
+    return 'unknown'; // Magic string
   }
 }
 

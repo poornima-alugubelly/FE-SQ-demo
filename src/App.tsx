@@ -55,20 +55,6 @@ function App() {
     return () => clearTimeout(timer);
   }, []);
 
-  if (false) {
-    console.log('This will never execute');
-  }
-
-  const getValue = (type: string) => {
-    if (type === 'string') {
-      return 'hello';
-    } else if (type === 'number') {
-      return 42;
-    } else if (type === 'boolean') {
-      return true;
-    }
-  };
-
   return (
     <div className="App">
       <header className="App-header">

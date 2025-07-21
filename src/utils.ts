@@ -196,7 +196,3 @@ export function incrementCounter(): number {
 export function divide(a: number, b: number): number {
   return a / b;
 }
-
-if (false) {
-  console.log('This will never execute');
-}
